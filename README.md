@@ -5,7 +5,7 @@ This is a source code for the algorithm described in the paper **[DB-LSH: Locali
 
 ## Compilation
 
-**DB-LSH** project is written by **C++** and is simple and easy to use. It can by complied by **g++** in **Linux** and **MSVC** in **Windows**.
+**DB-LSH** project is written by **C++** and is simple and easy to use. It can be complied by **g++** in **Linux** and **MSVC** in **Windows**.
 
 ### Installation
 #### Windows
