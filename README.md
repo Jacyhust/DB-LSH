@@ -34,15 +34,15 @@ The excutable file is then in dbLSH directory, called as `dblsh`
 - k            : 1-100, an integer, the number of returned points
 - L            : a positive integer, the number of indexes
 - K            : a positive integer, the dimensionality of an index
-- beta         : a float number, the maximum ratio of the number of returned points to the total number of dataset   
-```
-when `beta>0`     , algorithm finishes query with `beta` and other input parameters
-when `-10<beta<=0`, algorithm finishes query with a series of different `beta` to generate results for recall/ratio-time curves
-when `beta<-10`   , algorithm finishes query with `beta=0.1` and varying 'k'
-```
+- beta         : 0-1. a float number, the maximum ratio of the number of returned points to the total number of dataset   
 - R_min        : a float number, the inital radius
 -------------------------------------------------------------------
 
+```
+when `beta>0`     , DB-LSH finishes query with `beta` and other input parameters
+when `-10<beta<=0`, DB-LSH finishes query with a series of different `beta` to generate results for recall/ratio-time curves
+when `beta<-10`   , DB-LSH finishes query with `beta=0.1` and varying 'k'
+```
 
 FOR EXAMPLE, YOU CAN RUN THE FOLLOWING CODE IN COMMAND LINE AFTER BUILD ALL THE TOOLS:
 
@@ -73,7 +73,7 @@ The experimental result is saved in the directory `./dataset/ANN` as the file
 
 
 ## Acknowledgement
-**DB-LSH** project is developed by referring to LSHBOX (https://github.com/RSIA-LIESMARS-WHU/LSHBOX). Great appreciation to the contributors of LSHBOX.
+**DB-LSH** project is developed by referring to [LSHBOX](https://github.com/RSIA-LIESMARS-WHU/LSHBOX). Great appreciation to the contributors of LSHBOX.
 
 ## Reference
 **[DB-LSH: Locality-Sensitive Hashing with Query-based Dynamic Bucketing (submitted to ICDE 2022)]**
