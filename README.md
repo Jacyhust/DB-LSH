@@ -27,7 +27,6 @@ The excutable file is then in dbLSH directory, called as `dblsh`
 -------------------------------------------------------------------
 (the first parameter specifies the procedure be executed and change)
 
--------------------------------------------------------------------
 ### Parameter explanation
 
 - datasetName  : dataset name
@@ -36,10 +35,11 @@ The excutable file is then in dbLSH directory, called as `dblsh`
 - L            : a positive integer, the number of indexes
 - K            : a positive integer, the dimensionality of an index
 - beta         : a float number, the maximum ratio of the number of returned points to the total number of dataset   
-      when `beta>0`     , algorithm finishes query with `beta` and other input parameters
-      when `-10<beta<=0`, algorithm finishes query with a series of different `beta` to generate results for recall/ratio-time curves
-      when `beta<-10`   , algorithm finishes query with `beta=0.1` and varying 'k'
-
+```
+when `beta>0`     , algorithm finishes query with `beta` and other input parameters
+when `-10<beta<=0`, algorithm finishes query with a series of different `beta` to generate results for recall/ratio-time curves
+when `beta<-10`   , algorithm finishes query with `beta=0.1` and varying 'k'
+```
 - R_min        : a float number, the inital radius
 -------------------------------------------------------------------
 
@@ -59,12 +59,12 @@ In our project, the format of the input file (such as `audio.data_new`, which is
 
 >{Bytes of the data type} {The size of the vectors} {The dimension of the vectors} {All of the binary vector, arranged in turn}
 
-For your application, you should also transform your dataset into this binary format, then rename it is `[datasetName].data_new` and put it in the directory `./dataset`.
+For your application, you should also transform your dataset into this binary format, then rename it as `[datasetName].data_new` and put it in the directory `./dataset`.
 
 A sample dataset `audio.data_new` has been put in the directory `./dataset`.
-Also, you can get it, `audio.data`, from [here](http://www.cs.princeton.edu/cass/audio.tar.gz)(if so, rename it as `audio.data_new`), if the link is invalid, you can also get it from [data](https://github.com/RSIA-LIESMARS-WHU/LSHBOX-sample-data).
+Also, you can get it, `audio.data`, from [here](http://www.cs.princeton.edu/cass/audio.tar.gz)(if so, rename it as `audio.data_new`). If the link is invalid, you can also get it from [data](https://github.com/RSIA-LIESMARS-WHU/LSHBOX-sample-data).
 
-For other dataset, you can get the raw data from following websites: [MNIST](http://yann.lecun.com/exdb/mnist/index.html), [Cifar](http://www.cs.toronto.edu/~kriz/cifar.html), [Trevi](http://phototour.cs.washington.edu/patches/default.htm), [NUS](https://pan.baidu.com/share/init?surl=kVKfXFx)(Extraction code: hpxg), [Deep1M](https://www.cse.cuhk.edu.hk/systems/hash/gqr/dataset/deep1M.tar.gz), [GIST](http://corpus-texmex.irisa.fr/), [TinyImages80M](https://hyper.ai/tracker/download?torrent=6552), [SIFT](http://corpus-texmex.irisa.fr/). Next, you should transform your dataset into this binary format, then rename it is `[datasetName].data_new` and put it in the directory `./dataset`.
+For other dataset, you can get the raw data from following links: [MNIST](http://yann.lecun.com/exdb/mnist/index.html), [Cifar](http://www.cs.toronto.edu/~kriz/cifar.html), [Trevi](http://phototour.cs.washington.edu/patches/default.htm), [NUS](https://pan.baidu.com/share/init?surl=kVKfXFx)(Extraction code: hpxg), [Deep1M](https://www.cse.cuhk.edu.hk/systems/hash/gqr/dataset/deep1M.tar.gz), [GIST](http://corpus-texmex.irisa.fr/), [TinyImages80M](https://hyper.ai/tracker/download?torrent=6552), [SIFT](http://corpus-texmex.irisa.fr/). Next, you should transform your raw dataset into the mentioned binary format, then rename it is `[datasetName].data_new` and put it in the directory `./dataset`.
 
 
 ## Result
