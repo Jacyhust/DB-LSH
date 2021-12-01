@@ -64,7 +64,7 @@ For your application, you should also transform your dataset into this binary fo
 A sample dataset `audio.data_new` has been put in the directory `./dataset`.
 Also, you can get it, `audio.data`, from [here](http://www.cs.princeton.edu/cass/audio.tar.gz)(if so, rename it as `audio.data_new`). If the link is invalid, you can also get it from [data](https://github.com/RSIA-LIESMARS-WHU/LSHBOX-sample-data).
 
-For other dataset, you can get the raw data from following links: [MNIST](http://yann.lecun.com/exdb/mnist/index.html), [Cifar](http://www.cs.toronto.edu/~kriz/cifar.html), [Trevi](http://phototour.cs.washington.edu/patches/default.htm), [NUS](https://pan.baidu.com/share/init?surl=kVKfXFx)(Extraction code: hpxg), [Deep1M](https://www.cse.cuhk.edu.hk/systems/hash/gqr/dataset/deep1M.tar.gz), [GIST](http://corpus-texmex.irisa.fr/), [TinyImages80M](https://hyper.ai/tracker/download?torrent=6552), [SIFT](http://corpus-texmex.irisa.fr/). Next, you should transform your raw dataset into the mentioned binary format, then rename it is `[datasetName].data_new` and put it in the directory `./dataset`.
+For other dataset we use, you can get the raw data from following links: [MNIST](http://yann.lecun.com/exdb/mnist/index.html), [Cifar](http://www.cs.toronto.edu/~kriz/cifar.html), [Trevi](http://phototour.cs.washington.edu/patches/default.htm), [NUS](https://pan.baidu.com/share/init?surl=kVKfXFx)(Extraction code: hpxg), [Deep1M](https://www.cse.cuhk.edu.hk/systems/hash/gqr/dataset/deep1M.tar.gz), [GIST](http://corpus-texmex.irisa.fr/), [TinyImages80M](https://hyper.ai/tracker/download?torrent=6552), [SIFT](http://corpus-texmex.irisa.fr/). Next, you should transform your raw dataset into the mentioned binary format, then rename it is `[datasetName].data_new` and put it in the directory `./dataset`.
 
 
 ## Result
@@ -73,7 +73,7 @@ The experimental result is saved in the directory `./dataset/ANN` as the file
 
 
 ## Acknowledgement
-GMP project is developed by referring to LSHBOX (https://github.com/RSIA-LIESMARS-WHU/LSHBOX). Great appreciation to the contributors of LSHBOX.
+**DB-LSH** project is developed by referring to LSHBOX (https://github.com/RSIA-LIESMARS-WHU/LSHBOX). Great appreciation to the contributors of LSHBOX.
 
 ## Reference
 **[DB-LSH: Locality-Sensitive Hashing with Query-based Dynamic Bucketing (submitted to ICDE 2022)]**
