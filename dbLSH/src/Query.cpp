@@ -103,6 +103,9 @@ void Query::sift(Hash& hash, Preprocess& prep)
 	timer.restart();
 
 	cost = visits->count;
+	num_access = visits->num_leaf_access + visits->num_nonleaf_access;
+	num_access = visits->num_nonleaf_access;
+
 	std::sort(visits->res, visits->res + visits->count);
 	res.assign(visits->res, visits->res + visits->k);
 	time_sift = timer.elapsed();
@@ -124,7 +127,7 @@ void Performance::update(Query &query, Preprocess &prep)
 	time_verify += query.time_verify;
 	time_total += query.time_total;
 	rounds += query.rounds;
-
+	num_access_in_RTree += query.num_access;
 	unsigned num0 = query.res.size();
 	if (num0 > query.k)
 		num0 = query.k;

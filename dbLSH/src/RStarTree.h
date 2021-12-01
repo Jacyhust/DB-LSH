@@ -34,6 +34,8 @@ public:
 	int* flag;
 	float** original_data;
 	int count;
+	int num_leaf_access;
+	int num_nonleaf_access;
 	int low_dim;
 	int data_dim;
 	int k;
@@ -52,6 +54,8 @@ public:
 			flag[i] = true;
 		}
 		count = 0;
+		num_leaf_access = 0;
+		num_nonleaf_access = 0;
 		termination = false;
 		low_dim = K_;
 		data_dim = dim_;
@@ -1268,15 +1272,18 @@ void RSTNonLeafNode<Data, T>::read_from_buffer(const char *buffer)
 template <template <typename TP> class Data, typename T>
 void RSTNonLeafNode<Data, T>::windows_query(Visitor* visit)
 {
-	
+	//++visit->num_nonleaf_access;
 	for (int sub_id = 0; sub_id < this->entry_num; ++sub_id) {
 		if (visit->termination) return;
 		bool flag = true;
+		++visit->num_nonleaf_access;
 		for (int i = 0; i < 2 * this->dim; i += 2)
 		{
+			//++visit->num_nonleaf_access;
 			if ((visit->q_mbr[i] > entry_mbr[sub_id][i + 1]) ||
 				(visit->q_mbr[i + 1] < entry_mbr[sub_id][i])) {
 				flag = false;
+				//++visit->num_nonleaf_access;
 				break;
 			}
 
@@ -1529,13 +1536,15 @@ template <template <typename TP> class Data, typename T>
 void RSTLeafNode<Data, T>::windows_query(Visitor* visit)
 {
 	if (visit->termination) return;
-
+	
 	for (int j = 0; j < this->entry_num; ++j) {
 		bool flag_intersect = true;
+		++visit->num_leaf_access;
 		for (int i = 0; i < this->dim; ++i) {
 			if ((visit->q_mbr[2*i] > this->data[j]->data[i]) ||
 				(visit->q_mbr[2*i + 1] < this->data[j]->data[i])) {
 				flag_intersect = false;
+				
 				break;
 			}
 		}

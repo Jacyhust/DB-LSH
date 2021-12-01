@@ -1,7 +1,7 @@
 #pragma once
 #include "StructType.h"
 #include "Preprocess.h"
-#include "wlsh.h"
+#include "dblsh.h"
 #include <vector>
 #include <queue>
 
@@ -42,8 +42,8 @@ public:
 
 	unsigned cost = 0;
 
-	//bool* access_flag;
-
+	//#access;
+	int num_access = 0;
 	//
 	unsigned rounds = 0;
 	//cost of each partition
@@ -74,6 +74,8 @@ public:
 class Performance
 {
 public:
+	//#access_nodes
+	long long num_access_in_RTree = 0;
 	//cost
 	unsigned cost = 0;
 	//the average rounds of (r,c)-BC query for any point

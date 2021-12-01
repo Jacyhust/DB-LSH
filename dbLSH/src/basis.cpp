@@ -135,6 +135,6 @@ void showMemoryInfo(){}
 		HANDLE handle = GetCurrentProcess();
 		PROCESS_MEMORY_COUNTERS pmc;
 		GetProcessMemoryInfo(handle, &pmc, sizeof(pmc));
-		cout << "ÄÚ´æÊ¹ÓÃ:" << pmc.WorkingSetSize / (1024 * 1024) << "K/" << pmc.PeakWorkingSetSize / (1024 * 1024) << "K + " << pmc.PagefileUsage / (1024 * 1024) << "K/" << pmc.PeakPagefileUsage / (1024 * 1024) << "K" << endl;
+		cout << "Memory Usage: " << pmc.WorkingSetSize / (1024 * 1024) << "M/" << pmc.PeakWorkingSetSize / (1024 * 1024) << "M + " << pmc.PagefileUsage / (1024 * 1024) << "M/" << pmc.PeakPagefileUsage / (1024 * 1024) << "M." << endl;
 	}
 #endif

@@ -4,14 +4,13 @@
 #include <iostream>
 #include <fstream>
 #include "Preprocess.h"
-#include "wlsh.h"
+#include "dblsh.h"
 #include "Query.h"
 #include <time.h>
 #include "basis.h"
 
 void lshknn(float c, int k, Hash& myslsh, Preprocess& prep, float beta, std::string& datasetName, std::string& data_fold);
 void expe_k(float c, Hash& myslsh, Preprocess& prep, float beta, std::string& datasetName, std::string& data_fold);
-int vary_n(int argc, char const* argv[], float scale);
 
 int main(int argc, char const* argv[])
 {
@@ -19,7 +18,7 @@ int main(int argc, char const* argv[])
 	unsigned k = 50;
 	unsigned L = 8, K = 10;//NUS
 	L = 5, K = 10;
-	float beta = -5;
+	float beta = 0.1;
 	unsigned Qnum = 100;
 	float R_min = 1.0f;
 
@@ -30,7 +29,7 @@ int main(int argc, char const* argv[])
 	}
 	else if (argc > 2) {
 		if ((argc < 6 || argc > 8)) {
-			std::cerr << "Usage: ./wlsh datasetName approx_ratio k L K beta R_min(optinal)\n\n";
+			std::cerr << "Usage: ./dblsh datasetName approx_ratio k L K beta R_min(optinal)\n\n";
 			exit(-1);
 		}
 		datasetName = argv[1];
@@ -48,9 +47,12 @@ int main(int argc, char const* argv[])
 	}
 	else//only for debug, not advised for user
 	{
+		//std::cerr << "Usage: ./dblsh datasetName approx_ratio k L K beta R_min(optinal)\n\n";
+		//exit(-1);
+
 		const std::string datas[] = { "audio","mnist","cifar","NUS","Trevi","gist","deep1m" };
 		datasetName = datas[0];
-		datasetName = "sift1M";
+		datasetName = "audio";
 		set_rmin(datasetName, R_min);
 		std::cout << "Using the default configuration!\n\n";
 	}
@@ -61,39 +63,27 @@ int main(int argc, char const* argv[])
 	/// <param name="argc"></param>
 	/// <param name="argv"></param>
 	/// <returns></returns>
-	std::cout << "Using WINDOWS-LSH for " << datasetName << " ..." << std::endl;
+	std::cout << "Using DB-LSH for " << datasetName << " ..." << std::endl;
 	std::cout << "c=        " << c << std::endl;
 	std::cout << "k=        " << k << std::endl;
 	std::cout << "L=        " << L << std::endl;
 	std::cout << "K=        " << K << std::endl;
 	std::cout << "beta=     " << beta << std::endl;
-	std::cout << "R_min=    " << R_min << std::endl << std::endl;
+	//std::cout << "R_min=    " << R_min << std::endl << std::endl;
 
 	#if defined(unix) || defined(__unix__)
-		std::string data_fold = "./../dataset/", index_fold = "./../wLSH/";
+		std::string data_fold = "./../dataset/", index_fold = "";
 	#else
-		std::string data_fold = "E:/Dataset_for_c/", index_fold = "E:/Dataset_for_c/ANN/windows_lsh/";
+		std::string data_fold = "E:/Dataset_for_c/", index_fold = "";
 	#endif
 
-	//Preprocess prep(data_fold + datatsetName + ".data", data_fold + "ANN/" + datatsetName + ".bench");
 	Preprocess prep(data_fold + datasetName + ".data", data_fold + "ANN/" + datasetName + ".bench", beta);
-
-	//for (int i = 0; i < 10; ++i) {
-	//	std::cout << std::endl;
-	//	for (int j = 0; j < 5; ++j) {
-	//		std::cout << prep.data.query[i][j]<<"  " ;
-	//	}
-	//	std::cout << std::endl;
-	//	
-	//}
-	//return 0;
 
 	showMemoryInfo();
 
 	Parameter param(prep, L, K, R_min);
 	Hash myslsh(prep, param, index_fold.append(datasetName));
 
-	//expe_k(c, myslsh, prep, beta, datasetName, data_fold);
 	if (beta > 0) {
 		lshknn(c, k, myslsh, prep, beta, datasetName, data_fold);
 	}
@@ -140,12 +130,13 @@ void lshknn(float c, int k, Hash& myslsh, Preprocess& prep, float beta, std::str
 	std::cout << "AVG RATIO:         " << ((float)perform.ratio) / (perform.res_num) << std::endl;
 	std::cout << "AVG COST:          " << ((float)perform.cost) / ((float)perform.num * prep.data.N) << std::endl;
 	std::cout << "AVG ROUNDS:        " << ((float)perform.rounds) / (perform.num) << std::endl;
+	//std::cout << "AVG ACCESSES:      " << ((float)perform.num_access_in_RTree) / (perform.num) << std::endl;
 	std::cout << "\nFINISH... \n\n\n";
 
 	time_t now = std::time(0);
 	time_t zero_point = 1635153971;//Let me set the time at 2021.10.25. 17:27 as the zero point
 	float date = ((float)(now - zero_point)) / 86400;
-	std::ofstream os(data_fold + "ANN/WLSH_result.csv", std::ios_base::app);
+	std::ofstream os(data_fold + "ANN/DB-LSH_result.csv", std::ios_base::app);
 	os.seekp(0, std::ios_base::end); // 移动到文件尾
 	int tmp = (int)os.tellp();
 	if (tmp == 0) {
@@ -201,7 +192,7 @@ void expe_k(float c, Hash& myslsh, Preprocess& prep, float beta, std::string& da
 		time_t now = std::time(0);
 		time_t zero_point = 1635153971;//Let me set the time at 2021.10.25. 17:27 as the zero point
 		float date = ((float)(now - zero_point)) / 86400;
-		std::ofstream os(data_fold + "ANN/WLSH_result.csv", std::ios_base::app);
+		std::ofstream os(data_fold + "ANN/DB-LSH_result.csv", std::ios_base::app);
 		os.seekp(0, std::ios_base::end); // 移动到文件尾
 		int tmp = (int)os.tellp();
 		if (tmp == 0) {
@@ -218,90 +209,4 @@ void expe_k(float c, Hash& myslsh, Preprocess& prep, float beta, std::string& da
 		os.close();
 	}
 	
-}
-
-int vary_n(int argc, char const* argv[], float scale)
-{
-	float c = 1.5;
-	unsigned k = 50;
-	unsigned L = 8, K = 10;//NUS
-	L = 10, K = 5;
-	float beta = 0.25;
-	unsigned Qnum = 100;
-	float R_min = 0.1f;
-
-	std::string datasetName;
-	if (argc == 2) {
-		datasetName = argv[1];
-		set_rmin(datasetName, R_min);
-	}
-	else if (argc > 2) {
-		if ((argc < 6 || argc > 8)) {
-			std::cerr << "Usage: ./swlsh datasetName approx_ratio k L K beta R_min(optinal)\n\n";
-			exit(-1);
-		}
-		datasetName = argv[1];
-		c = std::atof(argv[2]);
-		//k = std::atoi(argv[3]);
-		L = std::atoi(argv[4]);
-		K = std::atoi(argv[5]);
-		beta = std::atof(argv[6]);
-		if (argc == 8) {
-			R_min = std::atof(argv[7]);
-		}
-		else {
-			set_rmin(datasetName, R_min);
-		}
-	}
-	else//only for debug, not advised for user
-	{
-		const std::string datas[] = { "audio","mnist","cifar","NUS","Trevi","gist","deep1m" };
-		datasetName = datas[0];
-		set_rmin(datasetName, R_min);
-		std::cout << "Using the default configuration!\n\n";
-	}
-
-	/// <summary>
-	/// Show the configuration
-	/// </summary>
-	/// <param name="argc"></param>
-	/// <param name="argv"></param>
-	/// <returns></returns>
-	std::cout << "Using STATIC_WINDOWS-LSH for " << datasetName << " ..." << std::endl;
-	std::cout << "c=        " << c << std::endl;
-	std::cout << "k=        " << k << std::endl;
-	std::cout << "L=        " << L << std::endl;
-	std::cout << "K=        " << K << std::endl;
-	std::cout << "beta=     " << beta << std::endl;
-	std::cout << "R_min=    " << R_min << std::endl << std::endl;
-
-#if defined(unix) || defined(__unix__)
-	std::string data_fold = "./../dataset/", index_fold = "./../swLSH/";
-#else
-	std::string data_fold = "E:/Dataset_for_c/", index_fold = "E:/Dataset_for_c/ANN/sw_lsh/";
-#endif
-
-	//Preprocess prep(data_fold + datatsetName + ".data", data_fold + "ANN/" + datatsetName + ".bench");
-	Preprocess prep(data_fold + datasetName + ".data", data_fold + "ANN/" + datasetName + ".bench", scale);
-
-	Parameter param(prep, L, K, R_min);
-	Hash myslsh(prep, param, index_fold.append(datasetName));
-
-	//expe_k(c, myslsh, prep, beta, datasetName, data_fold);
-	//return 0;
-	//std::vector<float> Betas;
-	if (beta > 0) {
-		lshknn(c, k, myslsh, prep, beta, datasetName, data_fold);
-	}
-	else if (beta <= 0 && beta > -10) {
-		std::vector<float> Betas = { 0.02,0.04,0.06,0.08,0.10,0.12,0.14,0.16,0.18,0.2 };
-		for (auto& x : Betas) {
-			lshknn(c, k, myslsh, prep, x, datasetName, data_fold);
-		}
-	}
-	else {
-		expe_k(c, myslsh, prep, beta, datasetName, data_fold);
-	}
-
-	return 0;
 }

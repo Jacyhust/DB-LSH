@@ -56,47 +56,6 @@ float calc_cosangle(				// calc cos(angle)
 // 	return ret;
 // }
 
-
-float calc_weighted_dist2(			// calc inner product
-	int   dim,							// dimension
-	const float *w,
-	const float *p1,					// 1st point
-	const float *p2)					// 2nd point
-{
-	double ret = 0.0f;
-	for (int i = 0; i < dim; ++i) {
-		ret += w[i]*(p1[i]-p2[i])*(p1[i]-p2[i]);
-	}
-	return ret;
-}
-
-
-int calc_hamming_dist(			// calc inner product
-	int   dim,		
-	const uint8_t *p1,					// 1st point
-	const uint8_t *p2)					// 2nd point
-{
-	int tail = dim%8;
-	int ret = 0;
-	for(int i=0;i<tail;i++){
-		ret += get_num_bits8(p1[i]^p2[i]);
-	}
-	ret += calc_hamming_dist(dim/8, (const uint64_t*)(p1+tail), (const uint64_t*)(p2+tail));
-	return ret;
-}
-
-int calc_hamming_dist(			// calc inner product
-	int   dim,		
-	const uint64_t *p1,					// 1st point
-	const uint64_t *p2)					// 2nd point
-{
-	int ret = 0;
-	for(int i=0;i<dim;i++){
-		ret += get_num_bits64(p1[i]^p2[i]);
-	}
-	return ret;
-}
-
 const int PrefixTableSize = 1 << 16;
 //std::array<uint8_t, PrefixTableSize> _prefix_table;
 

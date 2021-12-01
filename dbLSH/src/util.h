@@ -79,36 +79,6 @@ inline int log2ll(unsigned long long x) {
 #endif
 
 
-
-
-
-
-int calc_hamming_dist(			// calc inner product
-	int   dim,		
-	const uint8_t *p1,					// 1st point
-	const uint8_t *p2);					// 2nd point
-
-int calc_hamming_dist(			// calc inner product
-	int   dim,		
-	const uint64_t *p1,					// 1st point
-	const uint64_t *p2);					// 2nd point
-
-Scalar calc_angle(				// calc angle
-	int   dim,							// dimension
-	const Scalar *p1,					// 1st point
-	const Scalar *p2);					// 2nd point
-
-Scalar calc_angle_normalized(				// calc angle
-	int   dim,							// dimension
-	const Scalar *p1,					// 1st point
-	const Scalar *p2);					// 2nd point
-
-
-Scalar calc_cosangle(				// calc cos(angle)
-	int   dim,							// dimension
-	const Scalar *p1,					// 1st point
-	const Scalar *p2);					// 2nd point
-
 // -----------------------------------------------------------------------------
 template<class ScalarType>
 ScalarType sqr(ScalarType x)

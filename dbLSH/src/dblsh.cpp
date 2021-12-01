@@ -1,4 +1,4 @@
-#include "wlsh.h"
+#include "dblsh.h"
 #include "Preprocess.h"
 #include "basis.h"
 #include <fstream>
@@ -132,7 +132,7 @@ void Hash::GetTables(Preprocess& prep)
 	myIndexes = new RStarTree<TreeDataP, float>*[L];
 
 	
-	if (N > 50000) {
+	if (N > 1) {
 		lsh::timer timer;
 		for (int i = 0; i < L; ++i) {
 			timer.restart();
@@ -171,6 +171,14 @@ void Hash::GetTables(Preprocess& prep)
 				myIndexes[i]->insert(hs[i][j]);
 				++pd;
 			}
+			for (int j = 0; j < N; ++j) {
+				delete[] hs[i][j]->data;
+				hs[i][j]->data = NULL;
+				delete hs[i][j];
+			}
+			//clear_2d_array(hs[i], N);
+			delete[] hs[i];
+			hs[i] = NULL;
 		}
 	}
 }

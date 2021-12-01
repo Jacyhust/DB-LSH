@@ -11,10 +11,8 @@
 #include <numeric>
 #include<algorithm>
 
-#define CANDIDATES 100
 #define E 2.718281746
 #define PI 3.1415926
-#define MAXSIZE 5000
 
 #define min(a,b)            (((a) < (b)) ? (a) : (b))
 
