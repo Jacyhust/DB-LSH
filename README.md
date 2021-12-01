@@ -9,12 +9,7 @@ This is a source code for the algorithm described in the paper **[DB-LSH: Locali
 
 ### Installation
 #### Windows
-```bash
-cd ./dbLSH
-cmake ..(if cmake successfully the Makefile is in build directory)
-make (option parameters)
-```
-The excutable file is then in dbLSH directory, called as `dblsh.exe`
+We can use **Visual Studio 2019** (Other version of Visual Studio should also work but remains untested) to build the project with importing all the files in the directory `./dbLSH/src/`.
 
 #### Linux
 ```bash
@@ -51,23 +46,25 @@ The excutable file is then in dbLSH directory, called as `dblsh`
 
 FOR EXAMPLE, YOU CAN RUN THE FOLLOWING CODE IN COMMAND LINE AFTER BUILD ALL THE TOOLS:
 
-```
+```bash
 cd ./dbLSH
 dblsh audio 1.5 50 5 10 0.1 0.3  # a single query
 dblsh audio 1.5 50 5 10 -5 0.3   # vary beta
 dblsh audio 1.5 50 5 10 -20 0.3  # vary k
 ```
+
 ## Dataset
 
 In our project, the format of the input file (such as `audio.data_new`, which is in `float` data type) is the same as that in [LSHBOX](https://github.com/RSIA-LIESMARS-WHU/LSHBOX). It is a binary file but not a text file, because binary file has many advantages. The binary file is organized as the following format:
 
 >{Bytes of the data type} {The size of the vectors} {The dimension of the vectors} {All of the binary vector, arranged in turn}
 
-For your application, you should also transform your dataset into this binary format.
+For your application, you should also transform your dataset into this binary format, then rename it is `[datasetName].data_new` and put it in the directory `./dataset`.
 
-You can get the sample dataset `audio.data` from [here](http://www.cs.princeton.edu/cass/audio.tar.gz)(if so, rename it as `audio.data_new`), if the link is invalid, you can also get it from [data](https://github.com/RSIA-LIESMARS-WHU/LSHBOX-sample-data).
+A sample dataset `audio.data_new` has been put in the directory `./dataset`.
+Also, you can get it, `audio.data`, from [here](http://www.cs.princeton.edu/cass/audio.tar.gz)(if so, rename it as `audio.data_new`), if the link is invalid, you can also get it from [data](https://github.com/RSIA-LIESMARS-WHU/LSHBOX-sample-data).
 
-For other dataset, you can get the raw data from following websites: [MNIST](http://yann.lecun.com/exdb/mnist/index.html), [Cifar](http://www.cs.toronto.edu/~kriz/cifar.html), [Trevi](http://phototour.cs.washington.edu/patches/default.htm), [NUS](https://pan.baidu.com/share/init?surl=kVKfXFx)(Extraction code: hpxg), [Deep1M](https://www.cse.cuhk.edu.hk/systems/hash/gqr/dataset/deep1M.tar.gz), [GIST](http://corpus-texmex.irisa.fr/), [TinyImages80M](https://hyper.ai/tracker/download?torrent=6552), [SIFT](http://corpus-texmex.irisa.fr/).
+For other dataset, you can get the raw data from following websites: [MNIST](http://yann.lecun.com/exdb/mnist/index.html), [Cifar](http://www.cs.toronto.edu/~kriz/cifar.html), [Trevi](http://phototour.cs.washington.edu/patches/default.htm), [NUS](https://pan.baidu.com/share/init?surl=kVKfXFx)(Extraction code: hpxg), [Deep1M](https://www.cse.cuhk.edu.hk/systems/hash/gqr/dataset/deep1M.tar.gz), [GIST](http://corpus-texmex.irisa.fr/), [TinyImages80M](https://hyper.ai/tracker/download?torrent=6552), [SIFT](http://corpus-texmex.irisa.fr/). Next, you should transform your dataset into this binary format, then rename it is `[datasetName].data_new` and put it in the directory `./dataset`.
 
 
 ## Result
