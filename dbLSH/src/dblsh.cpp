@@ -61,6 +61,8 @@ void Hash::SetHash()
 		hashpar.rndAs2[i] = new float[1];
 	}
 
+	//
+	
 	//std::mt19937 rng(unsigned(0));
 	std::mt19937 rng(unsigned(std::time(0)));
 	std::normal_distribution<float> nd;//nd是一个norm随机数生成器，mu=0，sigma=1

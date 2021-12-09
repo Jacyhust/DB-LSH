@@ -51,102 +51,34 @@ Preprocess::Preprocess(const std::string& path, const std::string& ben_file_, fl
 
 void Preprocess::load_data(const std::string& path)
 {
-	std::string file = path + "_all";
-	file = path + "_new";
-	std::ifstream is_new(file.c_str(), std::ios::binary);
-	unsigned header[3] = { 0 };
-	if (!is_new) {
-		std::ifstream is(path.c_str(), std::ios::binary);
-		if (!is) {
-			std::cout << "Fail to open the file:\n" << path << "!\n";
-			exit(-10086);
-		}
-		
-		assert(sizeof header == 3 * 4);
-		is.read((char*)header, sizeof(header));
-		assert(header[1] != 0);
-		float* array_ = new float[header[2] * header[1]];
-		is.read((char*)&array_[0], sizeof(float) * header[2] * header[1]);
-		data.N = header[1];
-		//data.N = 100;
-		data.dim = header[2];
-		//Eigen::Map<Eigen::MatrixXf> data_(array_, header[1], header[2]);
-		//data.val = data_;
-		is.close();
+	std::string file = path + "_new";
+	std::ifstream in(file.c_str(), std::ios::binary);
+	unsigned int header[3] = {};
+	assert(sizeof header == 3 * 4);
+	in.read((char*)header, sizeof(header));
+	assert(header[0] != sizeof(float));
+	data.N = header[1];
+	data.dim = header[2];
 
-		data.val = new float* [data.N];
-		for (int i = 0; i < data.N; ++i) {
-			data.val[i] = new float[data.dim];
-			for (int j = 0; j < data.dim; ++j) {
-				data.val[i][j] = array_[j * data.N + i];
-			}
-		}
-		delete[] array_;
-
-		/*******************Restore the data by other approach******************/
-
-		//int MaxQueryNum = std::min(200, (int)data.N - 1);
-		//data.query = data.val;
-		//data.val = &(data.query[200]);
-		//data.N -= MaxQueryNum;
-		
-		std::ofstream out(file.c_str(), std::ios::binary);
-		out.write((char*)header, sizeof(header));
-		for (int i = 0; i < data.N; ++i) {
-			//out.write((char*)&i, sizeof(int));
-			out.write((char*)data.val[i], sizeof(float) * header[2]);
-		}
-			
-		out.close();
-
-		//file.append("_query");
-		//std::ofstream outq(file.c_str(), std::ios::binary);
-		////out.write((char*)header, sizeof(header));
-		//for (int i = 0; i < MaxQueryNum; ++i) {
-		//	outq.write((char*)&i, sizeof(int));
-		//	outq.write((char*)data.query[i], sizeof(float) * header[2]);
-		//}
-		//	
-		//outq.close();
-
-		exit(10010);
+	data.val = new float* [data.N];
+	for (int i = 0; i < data.N; ++i) {
+		data.val[i] = new float[data.dim];
+		//in.seekg(sizeof(float), std::ios::cur);
+		in.read((char*)data.val[i], sizeof(float) * header[2]);
 	}
-	else {
-		file = path + "_new";
-		std::ifstream in(file.c_str(), std::ios::binary);
-		assert(sizeof header == 3 * 4);
-		in.read((char*)header, sizeof(header));
-		assert(header[1] != 0);
-		//float* array_ = new float[header[2] * header[1]];
-		//is.read((char*)&array_[0], sizeof(float) * header[2] * header[1]);
-		data.N = header[1];
-		//data.N = 100;
-		data.dim = header[2];
-		//Eigen::Map<Eigen::MatrixXf> data_(array_, header[1], header[2]);
-		//data.val = data_;
-		//is.close();
 
-		data.val = new float* [data.N];
-		for (int i = 0; i < data.N; ++i) {
-			data.val[i] = new float[data.dim];
-			//in.seekg(sizeof(float), std::ios::cur);
-			in.read((char*)data.val[i], sizeof(float) * header[2]);
-		}
+	int MaxQueryNum = min(200, (int)data.N - 1);
+	data.query = data.val;
+	data.val = &(data.query[200]);
+	data.N -= MaxQueryNum;
 
-		int MaxQueryNum = min(200, (int)data.N - 1);
-		data.query = data.val;
-		data.val = &(data.query[200]);
-		data.N -= MaxQueryNum;
+	std::cout << "Load from new file: " << file << "\n";
+	std::cout << "N=    " << data.N << "\n";
+	std::cout << "dim=  " << data.dim << "\n\n";
 
-		std::cout << "Load from new file: " << file << "\n";
-		std::cout << "N=    " << data.N << "\n";
-		std::cout << "dim=  " << data.dim << "\n\n";
-		
-		//for (int i = 0; i < data.N; ++i)
-			
-		in.close();
+	//for (int i = 0; i < data.N; ++i)
 
-	}
+	in.close();
 }
 
 //void Preprocess::load_data(const std::string& path)
