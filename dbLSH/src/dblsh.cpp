@@ -63,8 +63,8 @@ void Hash::SetHash()
 
 	//
 	
-	//std::mt19937 rng(unsigned(0));
-	std::mt19937 rng(unsigned(std::time(0)));
+	std::mt19937 rng(unsigned(0));
+	//std::mt19937 rng(unsigned(std::time(0)));
 	std::normal_distribution<float> nd;//nd是一个norm随机数生成器，mu=0，sigma=1
 	for (unsigned j = 0; j < S; j++)
 	{
@@ -135,10 +135,10 @@ void Hash::GetTables(Preprocess& prep)
 
 	
 	if (N > 1) {
-		lsh::timer timer;
+#pragma omp parallel for
 		for (int i = 0; i < L; ++i) {
+			lsh::timer timer;
 			timer.restart();
-			//n1[0] = i + '0';
 			std::string file = "RStar_index_file//" + std::to_string(i) + "_rstar.rt";
 			myIndexes[i] = new RStarTree<TreeDataP, float>(file.c_str(), K, page_len, ".",
 				pols[0], pagefile_cache_size, force_new);
@@ -146,7 +146,6 @@ void Hash::GetTables(Preprocess& prep)
 			//construct tree using STR bulkloading
 			myIndexes[i]->bulkload_str(hs[i], N, 0.7);
 			
-
 			for (int j = 0; j < N; ++j) {
 				delete[] hs[i][j]->data;
 				hs[i][j]->data = NULL;

@@ -14,7 +14,7 @@
 #include <vector>
 #include <random>
 #include <sstream>
-
+#include <omp.h>
 
 //#include "def.h"
 //#include "pri_queue.h"
@@ -130,6 +130,21 @@ inline ScalarType fast_reduce(int dim, const ScalarType* x, const ScalarType* y,
 		auto r4567 = fs(r45, r67);
 		return fs(r0123, r4567);
 	};
+
+//#pragma omp parallel for
+	//for (int i = 0; i < d / 8; ++i) {
+	//	r = fs(r, fsum8());
+	//	r0 = fp(a[0], b[0]);
+	//	r1 = fp(a[1], b[1]);
+	//	r2 = fp(a[2], b[2]);
+	//	r3 = fp(a[3], b[3]);
+	//	r4 = fp(a[4], b[4]);
+	//	r5 = fp(a[5], b[5]);
+	//	r6 = fp(a[6], b[6]);
+	//	r7 = fp(a[7], b[7]);
+	//	a += 8;
+	//	b += 8;
+	//}
 
     for (; a < end_a; a += 8, b += 8) {
 #ifdef __GNUC__

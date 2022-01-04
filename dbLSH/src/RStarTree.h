@@ -1555,7 +1555,7 @@ void RSTLeafNode<Data, T>::windows_query(Visitor* visit)
 				visit->res[visit->count].id = data_id;
 				visit->res[visit->count].dist = calc_l2_dist<float>(visit->data_dim, visit->original_data[data_id], visit->q_point);
 				
-				
+				//visit->res[visit->count].dist = cal_dist(visit->original_data[data_id], visit->q_point, visit->data_dim);
 				if (visit->count == visit->k) {
 					std::sort(visit->res, visit->res + visit->k);
 					visit->kth_dist = visit->res[visit->k - 1].dist;
