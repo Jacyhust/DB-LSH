@@ -51,8 +51,8 @@ int main(int argc, char const* argv[])
 		//exit(-1);
 
 		const std::string datas[] = { "audio","mnist","cifar","NUS","Trevi","gist","deep1m" };
-		datasetName = datas[0];
-		datasetName = "audio";
+		datasetName = datas[5];
+		//datasetName = "audio";
 		set_rmin(datasetName, R_min);
 		std::cout << "Using the default configuration!\n\n";
 	}

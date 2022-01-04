@@ -4,9 +4,12 @@
 #include <random>
 #include <set>
 #include <assert.h>
+#include <omp.h>
+
 float cal_inner_product(float* v1, float* v2, int dim)
 {
 	float res = 0.0;
+//#pragma omp parallel for
 	for (int i = 0; i < dim; ++i) {
 		res += v1[i] * v2[i];
 	}
@@ -16,9 +19,14 @@ float cal_inner_product(float* v1, float* v2, int dim)
 float cal_dist(float* v1, float* v2, int dim)
 {
 	float res = 0.0;
-	for (int i = 0; i < dim; ++i) {
-		res += (v1[i] - v2[i]) * (v1[i] - v2[i]);
+	int i = 0;
+#pragma omp parallel for reduction(+:res) default(shared) num_threads(4)
+	for (i = 0; i < dim; ++i) {
+		auto& e1 = v1[i]; auto& e2 = v2[i];
+		res += (e1 - e2) * (e1 - e2);
+		//res += (v1[i] - v2[i]) * (v1[i] - v2[i]);
 	}
+//#pragma omp critical
 	return sqrt(res);
 }
 
