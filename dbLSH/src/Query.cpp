@@ -78,9 +78,9 @@ void Query::sift(Hash& hash, Preprocess& prep)
 	if (prep.hasT) {
 		T = beta * hash.N + k;
 	}
+	T = beta * hash.N + k;
 
-
-	Visitor* visits = new Visitor(hash.N, hash.K, hash.dim, k, T, mydata, query_point, hash.R_min * c);
+ 	Visitor* visits = new Visitor(hash.N, hash.K, hash.dim, k, T, mydata, query_point, hash.R_min * c);
 
 	lsh::timer timer;
 	while (! visits->termination && rounds<=30) {
@@ -106,7 +106,8 @@ void Query::sift(Hash& hash, Preprocess& prep)
 	num_access = visits->num_leaf_access + visits->num_nonleaf_access;
 	num_access = visits->num_nonleaf_access;
 
-	std::sort(visits->res, visits->res + visits->count);
+	//std::sort(visits->res, visits->res + visits->count);
+	std::partial_sort(visits->res, visits->res + visits->k, visits->res + visits->count);
 	res.assign(visits->res, visits->res + visits->k);
 	time_sift = timer.elapsed();
 	delete visits;

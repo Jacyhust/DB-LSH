@@ -88,7 +88,7 @@ void GenericTool::EnsurePathExistence(const char *path)
 	{
 		int len=strlen(path);
 		char *dir_path=new char[len+10];
-#ifdef WIN32
+#ifdef _WIN32 || _WIN64
 		int ret=c99_snprintf(dir_path, len+10, "mkdir \"%s\"", path); // win32
 #else
 		int ret=c99_snprintf(dir_path, len+10, "mkdir %s -p", path); // unix

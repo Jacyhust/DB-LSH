@@ -138,3 +138,17 @@ void showMemoryInfo(){}
 		cout << "Memory Usage: " << pmc.WorkingSetSize / (1024 * 1024) << "M/" << pmc.PeakWorkingSetSize / (1024 * 1024) << "M + " << pmc.PagefileUsage / (1024 * 1024) << "M/" << pmc.PeakPagefileUsage / (1024 * 1024) << "M." << endl;
 	}
 #endif
+
+//inline 
+//bool Is_Intersect(float*& mbr, float*& data, int& dim)
+//{
+//	return true;
+//	bool flag_intersect;
+//	for (int i = 0; i < dim; ++i) {
+//		if ((mbr[2 * i] > data[i]) ||
+//			(mbr[2 * i + 1] < data[i])) {
+//			return false;
+//		}
+//	}
+//	return true;
+//}

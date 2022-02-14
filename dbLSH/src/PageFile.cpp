@@ -31,7 +31,7 @@ void PageFile::Construct(const char *name, int p_len, const char *path, c_policy
 		f=new fstream(fname, ios::in | ios::out | ios::binary);
 		new_file=false;
 
-		if(!f->is_open())
+		if(!f)
 		{
 			printf("Open File %s Failed!\n", fname);
 			exit(-1);

@@ -19,6 +19,65 @@ using namespace std;
 #undef max
 #undef min
 
+inline 
+bool Is_Intersect(float* mbr, float* data, const int& dim)
+{
+	//return true;
+	//bool flag_intersect;
+	if (dim == 10) {
+		return !((*(mbr)> (*data))|| (*(++mbr) < (*data))
+			|| (*(++mbr) > *(++data)) || (*(++mbr) < (*data))
+			|| (*(++mbr) > *(++data)) || (*(++mbr) < (*data))
+			|| (*(++mbr) > *(++data)) || (*(++mbr) < (*data))
+			|| (*(++mbr) > *(++data)) || (*(++mbr) < (*data))
+			|| (*(++mbr) > *(++data)) || (*(++mbr) < (*data))
+			|| (*(++mbr) > *(++data)) || (*(++mbr) < (*data))
+			|| (*(++mbr) > *(++data)) || (*(++mbr) < (*data))
+			|| (*(++mbr) > *(++data)) || (*(++mbr) < (*data))
+			|| (*(++mbr) > *(++data)) || (*(++mbr) < (*data))
+			);
+	}
+
+	for (int i = 0; i < dim; ++i) {
+		if ((*(mbr++) > (*data)) ||
+			(*(mbr++) < (*(data++)))) {
+			return false;
+		}
+	}
+	return true;
+}
+
+inline
+bool Is_enclosing(float* qmbr, float* nmbr, const int& dim)
+{
+	//return true;
+	//bool flag_intersect;
+	if (dim == 10) {
+		return !(
+			(*(qmbr) > *(nmbr)) || (*(++qmbr) < *(++nmbr))
+			|| (*(++qmbr) > *(++nmbr)) || (*(++qmbr) < *(++nmbr))
+			|| (*(++qmbr) > *(++nmbr)) || (*(++qmbr) < *(++nmbr))
+			|| (*(++qmbr) > *(++nmbr)) || (*(++qmbr) < *(++nmbr))
+			|| (*(++qmbr) > *(++nmbr)) || (*(++qmbr) < *(++nmbr))
+			|| (*(++qmbr) > *(++nmbr)) || (*(++qmbr) < *(++nmbr))
+			|| (*(++qmbr) > *(++nmbr)) || (*(++qmbr) < *(++nmbr))
+			|| (*(++qmbr) > *(++nmbr)) || (*(++qmbr) < *(++nmbr))
+			|| (*(++qmbr) > *(++nmbr)) || (*(++qmbr) < *(++nmbr))
+			|| (*(++qmbr) > *(++nmbr)) || (*(++qmbr) < *(++nmbr))
+			);
+	}
+
+	for (int i = 0; i < dim; ++i) {
+		if (
+			(*(qmbr++) > *(nmbr++)) ||
+			(*(qmbr++) < *(nmbr++))
+			) {
+			return false;
+		}
+	}
+	return true;
+}
+
 struct Res//the result of knns
 {
 	int id = -1;
@@ -75,6 +134,7 @@ public:
 		delete[] res;
 	}
 };
+
 
 //data structure declaration
 enum INSERT_RESULT {INSERT_SPLIT, INSERT_REINSERT, INSERT_NONE};
@@ -477,7 +537,11 @@ public:
 template <template <typename TP> class Data, typename T>
 class RSTLeafNode : public RSTNode<Data, T>
 {
+private:
+	
 public:
+	T* nmbr = NULL;
+	T maxLengthOfSide = 0;
 	Data<T> **data; // the contained data
 
 	RSTLeafNode(RStarTree<Data, T> *rt); //generate new page
@@ -1537,18 +1601,28 @@ void RSTLeafNode<Data, T>::windows_query(Visitor* visit)
 {
 	if (visit->termination) return;
 	
+	//T* mbr = new T[2 * this->dim];
+	//this->get_mbr(mbr);
+	bool flag_enclosing = (visit->q_mbr[1] - visit->q_mbr[0] >= maxLengthOfSide) && Is_enclosing(visit->q_mbr, nmbr, this->dim);
+	//delete mbr;
 	for (int j = 0; j < this->entry_num; ++j) {
-		bool flag_intersect = true;
+		//bool flag_intersect = true;
 		++visit->num_leaf_access;
-		for (int i = 0; i < this->dim; ++i) {
-			if ((visit->q_mbr[2*i] > this->data[j]->data[i]) ||
-				(visit->q_mbr[2*i + 1] < this->data[j]->data[i])) {
-				flag_intersect = false;
-				
-				break;
-			}
-		}
-		if (flag_intersect) {
+		//for (int i = 0; i < this->dim; ++i) {
+		//	if ((visit->q_mbr[2*i] > this->data[j]->data[i]) ||
+		//		(visit->q_mbr[2*i + 1] < this->data[j]->data[i])) {
+		//		flag_intersect = false;
+		//		
+		//		break;
+		//	}
+		//}
+		//if (Is_nonIntersect(visit->q_mbr, this->data[j]->data, this->dim)) {
+		//	break;
+		//}
+
+		if (
+			flag_enclosing||
+			Is_Intersect(visit->q_mbr, this->data[j]->data, this->dim)) {
 			int data_id = this->data[j]->id;
 			if (visit->flag[data_id]) {
 				visit->flag[data_id] = false;
@@ -1640,6 +1714,8 @@ void RSTLeafNode<Data, T>::split(RSTLeafNode<Data, T> *sn)
 	//update entry num
 	sn->entry_num=this->entry_num-dist;
 	this->entry_num=dist;
+
+	
 }
 
 template <template <typename TP> class Data, typename T>
@@ -1710,12 +1786,14 @@ T *RSTLeafNode<Data, T>::get_mbr(T *buf)
 		{
 			buf[j]=min<T>(buf[j], mbr_buf[j]);
 			buf[j+1]=max<T>(buf[j+1], mbr_buf[j+1]);
+			maxLengthOfSide = max<T>(buf[j + 1] - buf[j], maxLengthOfSide);
 		}
 	}
 
 	delete[] mbr_buf;
-
 	return buf;
+
+	//return mbr_buf;
 }
 
 template <template <typename TP> class Data, typename T>
@@ -1757,11 +1835,11 @@ INSERT_RESULT RSTLeafNode<Data, T>::insert(Data<T> *d, RSTNode<Data, T> **sn)
 		{
 			//if no re-insert on level 0
 			//find center of the node
-			T *mbr=new T[2*this->dim];
+			//T *mbr=new T[2*this->dim];
 			T *center=new T[this->dim];
-
-			get_mbr(mbr);
-			for(int i=0;i<2*this->dim;i+=2) center[i/2]=(mbr[i]+mbr[i+1])/((T)2);
+			nmbr = new T[2 * this->dim];
+			get_mbr(nmbr);
+			for(int i=0;i<2*this->dim;i+=2) center[i/2]=(nmbr[i]+nmbr[i+1])/((T)2);
 
 			//build all MBRs
 			int *sort_center=new int[this->entry_num];
@@ -1803,7 +1881,7 @@ INSERT_RESULT RSTLeafNode<Data, T>::insert(Data<T> *d, RSTNode<Data, T> **sn)
 			for(j=this->entry_num-last_cand;j<this->entry_num;j++) data[j]=NULL;
 
 			//release
-			delete[] mbr;
+			//delete[] mbr;
 			delete[] center;
 			delete[] sort_center;
 			for(int i=0;i<this->entry_num;i++) delete[] entry_mbr[i];
@@ -1819,6 +1897,7 @@ INSERT_RESULT RSTLeafNode<Data, T>::insert(Data<T> *d, RSTNode<Data, T> **sn)
 
 			this->dirty=true;
 
+			get_mbr(nmbr);
 			return INSERT_REINSERT;
 		}
 		else
@@ -1826,6 +1905,12 @@ INSERT_RESULT RSTLeafNode<Data, T>::insert(Data<T> *d, RSTNode<Data, T> **sn)
 			*sn=new RSTLeafNode<Data, T>(this->the_tree); //append a new leaf node
 			(*sn)->depth=this->depth;
 			split((RSTLeafNode<Data, T> *)*sn);
+			//sn->nmbr== new T[2 * this->dim];
+
+			RSTLeafNode<Data, T>* ptr = static_cast<RSTLeafNode<Data, T> *>(*sn);
+			ptr->nmbr = new T[2 * this->dim];
+			ptr->get_mbr(ptr->nmbr);
+			get_mbr(nmbr);
 
 			return INSERT_SPLIT;
 		}
@@ -2182,6 +2267,9 @@ void RStarTree<Data, T>::bulkload_str(Data<T> **the_data_array, int num_data, do
 				exit(-1);
 			}
 		}
+		leaf_node->nmbr= new T[2 * this->dim];
+		leaf_node->get_mbr(leaf_node->nmbr);
+
 		nodes.push_back(leaf_node);
 		leaf_node=NULL;
 
@@ -2200,6 +2288,8 @@ void RStarTree<Data, T>::bulkload_str(Data<T> **the_data_array, int num_data, do
 				exit(-1);
 			}
 		}
+		leaf_node->nmbr = new T[2 * this->dim];
+		leaf_node->get_mbr(leaf_node->nmbr);
 		nodes.push_back(leaf_node);
 	}
 

@@ -61,11 +61,9 @@ void Hash::SetHash()
 		hashpar.rndAs2[i] = new float[1];
 	}
 
-	//
-	
-	//std::mt19937 rng(unsigned(0));
-	std::mt19937 rng(unsigned(std::time(0)));
-	std::normal_distribution<float> nd;//nd是一个norm随机数生成器，mu=0，sigma=1
+	std::mt19937 rng(unsigned(0));
+	//std::mt19937 rng(unsigned(std::time(0)));
+	std::normal_distribution<float> nd;//nd is a norm random variable genarator，mu=0，sigma=1
 	for (unsigned j = 0; j < S; j++)
 	{
 		for (unsigned i = 0; i < dim; i++)
@@ -97,7 +95,6 @@ void Hash::GetHash(Preprocess& prep)
 			}
 		}
 	}
-
 	showMemoryInfo();
 }
 
@@ -136,6 +133,7 @@ void Hash::GetTables(Preprocess& prep)
 	
 	if (N > 1) {
 		lsh::timer timer;
+//#pragma omp parallel for
 		for (int i = 0; i < L; ++i) {
 			timer.restart();
 			//n1[0] = i + '0';
@@ -157,7 +155,7 @@ void Hash::GetTables(Preprocess& prep)
 			hs[i] = NULL;
 			printf("The %d-th R*-Tree has been built. Elapsed time: %.3fs\n", i, timer.elapsed());
 
-			showMemoryInfo();
+			//showMemoryInfo();
 		}
 	}
 	else {

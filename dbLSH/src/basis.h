@@ -133,3 +133,5 @@ void clear_2d_array(T** array, int n)
 void showMemoryInfo();
 
 //void lshknn();
+
+//bool Is_Intersect(float*& mbr, float*& data, int& dim);

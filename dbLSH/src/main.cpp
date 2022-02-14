@@ -9,6 +9,24 @@
 #include <time.h>
 #include "basis.h"
 
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
+#define BLUE    "\033[34m"      /* Blue */
+#define MAGENTA "\033[35m"      /* Magenta */
+#define CYAN    "\033[36m"      /* Cyan */
+#define WHITE   "\033[37m"      /* White */
+#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
+#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
+#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
+#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
+#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
+#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
+#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
+#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+
 void lshknn(float c, int k, Hash& myslsh, Preprocess& prep, float beta, std::string& datasetName, std::string& data_fold);
 void expe_k(float c, Hash& myslsh, Preprocess& prep, float beta, std::string& datasetName, std::string& data_fold);
 
@@ -17,7 +35,7 @@ int main(int argc, char const* argv[])
 	float c = 1.5;
 	unsigned k = 50;
 	unsigned L = 8, K = 10;//NUS
-	L = 5, K = 10;
+	L = 5, K = 2;
 	float beta = 0.1;
 	unsigned Qnum = 100;
 	float R_min = 1.0f;
@@ -47,12 +65,13 @@ int main(int argc, char const* argv[])
 	}
 	else//only for debug, not advised for user
 	{
-		//std::cerr << "Usage: ./dblsh datasetName approx_ratio k L K beta R_min(optinal)\n\n";
-		//exit(-1);
+		std::cout << BOLDYELLOW << "Usage:" << YELLOW << " ./dblsh datasetName approx_ratio k L K beta R_min(optinal)\n\n" << RESET;
+		exit(-1);
 
 		const std::string datas[] = { "audio","mnist","cifar","NUS","Trevi","gist","deep1m" };
 		datasetName = datas[0];
 		datasetName = "audio";
+
 		set_rmin(datasetName, R_min);
 		std::cout << "Using the default configuration!\n\n";
 	}
@@ -77,7 +96,7 @@ int main(int argc, char const* argv[])
 		std::string data_fold = "E:/Dataset_for_c/", index_fold = "";
 	#endif
 
-	Preprocess prep(data_fold + datasetName + ".data", data_fold + "ANN/" + datasetName + ".bench", beta);
+	Preprocess prep(data_fold + datasetName + ".data", data_fold + "ANN/" + datasetName + ".bench");
 
 	showMemoryInfo();
 
@@ -131,26 +150,36 @@ void lshknn(float c, int k, Hash& myslsh, Preprocess& prep, float beta, std::str
 	std::cout << "AVG COST:          " << ((float)perform.cost) / ((float)perform.num * prep.data.N) << std::endl;
 	std::cout << "AVG ROUNDS:        " << ((float)perform.rounds) / (perform.num) << std::endl;
 	//std::cout << "AVG ACCESSES:      " << ((float)perform.num_access_in_RTree) / (perform.num) << std::endl;
-	std::cout << "\nFINISH... \n\n\n";
+	std::cout << "\nQUERY FINISH... \n\n\n";
 
 	time_t now = std::time(0);
 	time_t zero_point = 1635153971;//Let me set the time at 2021.10.25. 17:27 as the zero point
 	float date = ((float)(now - zero_point)) / 86400;
-	std::ofstream os(data_fold + "ANN/DB-LSH_result.csv", std::ios_base::app);
-	os.seekp(0, std::ios_base::end); // 移动到文件尾
-	int tmp = (int)os.tellp();
-	if (tmp == 0) {
-		os << "Dataset,c,k,L,K,R_min,RATIO,RECALL,AVG_TIME,COST,DATE" << std::endl;
+
+	std::string fpath = data_fold + "ANN/";
+
+	if (!GenericTool::CheckPathExistence(fpath.c_str())) {
+		GenericTool::EnsurePathExistence(fpath.c_str());
+		std::cout << BOLDGREEN << "WARNING:\n" << GREEN << "Could not find the path of result file. Have created it. \n"
+			<< "The query result will be stored in: " << fpath.c_str() << RESET;
 	}
-	std::string dataset = datasetName; 
-	os << dataset << ',' << c << ',' << k << ',' << myslsh.L << ',' << myslsh.K << ',' << myslsh.R_min << ','
-		<< ((float)perform.ratio) / (perform.res_num) << ','
-		<< ((float)perform.NN_num) / (perform.num * k) << ','
-		<< mean_time * 1000 << ','
-		<< ((float)perform.cost) / (perform.num * prep.data.N) << ','
-		<< date << ','
-		<< std::endl;
-	os.close();
+	std::ofstream os(fpath + "DB-LSH_result.csv", std::ios_base::app);
+	if (os) {
+		os.seekp(0, std::ios_base::end); // move to the end of file
+		int tmp = (int)os.tellp();
+		if (tmp == 0) {
+			os << "Dataset,c,k,L,K,R_min,RATIO,RECALL,AVG_TIME,COST,DATE" << std::endl;
+		}
+		std::string dataset = datasetName;
+		os << dataset << ',' << c << ',' << k << ',' << myslsh.L << ',' << myslsh.K << ',' << myslsh.R_min << ','
+			<< ((float)perform.ratio) / (perform.res_num) << ','
+			<< ((float)perform.NN_num) / (perform.num * k) << ','
+			<< mean_time * 1000 << ','
+			<< ((float)perform.cost) / (perform.num * prep.data.N) << ','
+			<< date << ','
+			<< std::endl;
+		os.close();
+	}
 }
 
 void expe_k(float c, Hash& myslsh, Preprocess& prep, float beta, std::string& datasetName, std::string& data_fold) {
@@ -193,7 +222,7 @@ void expe_k(float c, Hash& myslsh, Preprocess& prep, float beta, std::string& da
 		time_t zero_point = 1635153971;//Let me set the time at 2021.10.25. 17:27 as the zero point
 		float date = ((float)(now - zero_point)) / 86400;
 		std::ofstream os(data_fold + "ANN/DB-LSH_result.csv", std::ios_base::app);
-		os.seekp(0, std::ios_base::end); // 移动到文件尾
+		os.seekp(0, std::ios_base::end); // move to the end of file
 		int tmp = (int)os.tellp();
 		if (tmp == 0) {
 			os << "Dataset,c,k,L,K,R_min,RATIO,RECALL,AVG_TIME,COST,DATE" << std::endl;

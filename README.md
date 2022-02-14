@@ -30,7 +30,7 @@ The excutable file is then in dbLSH directory, called as `dblsh`
 ### Parameter explanation
 
 - datasetName  : dataset name
-- c            : 0-1, a float number, the approximate ratio
+- c            : >1, a float number, the approximate ratio
 - k            : 1-100, an integer, the number of returned points
 - L            : a positive integer, the number of indexes
 - K            : a positive integer, the dimensionality of an index
@@ -57,7 +57,8 @@ dblsh audio 1.5 50 5 10 -20 0.3  # vary k
 
 In our project, the format of the input file (such as `audio.data_new`, which is in `float` data type) is the same as that in [LSHBOX](https://github.com/RSIA-LIESMARS-WHU/LSHBOX). It is a binary file but not a text file, because binary file has many advantages. The binary file is organized as the following format:
 
->{Bytes of the data type} {The size of the vectors} {The dimension of the vectors} {All of the binary vector, arranged in turn}
+>{Bytes of the data type (int)} {The size of the vectors (int)} {The dimension of the vectors (int)} {All of the binary vector, arranged in turn (float)}
+
 
 For your application, you should also transform your dataset into this binary format, then rename it as `[datasetName].data_new` and put it in the directory `./dataset`.
 
@@ -68,12 +69,11 @@ For other dataset we use, you can get the raw data from following links: [MNIST]
 
 
 ## Result
-The experimental result is saved in the directory `./dataset/ANN` as the file
-`DB-LSH_result.csv`
+The experimental result is saved in the directory `./dataset/ANN` as the file `DB-LSH_result.csv`
 
 
 ## Acknowledgement
-**DB-LSH** project is developed by referring to [LSHBOX](https://github.com/RSIA-LIESMARS-WHU/LSHBOX). Great appreciation to the contributors of LSHBOX.
+**DB-LSH** project is developed by referring to [LSHBOX](https://github.com/RSIA-LIESMARS-WHU/LSHBOX) and [RStarTree](https://github.com/Hui-Li/RStarTree). Great appreciation to the contributors.
 
 ## Reference
 **[DB-LSH: Locality-Sensitive Hashing with Query-based Dynamic Bucketing (submitted to ICDE 2022)]**

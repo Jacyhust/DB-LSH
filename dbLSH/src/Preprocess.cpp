@@ -26,7 +26,7 @@ Preprocess::Preprocess(const std::string& path, const std::string& ben_file_)
 
 	data_file = path;
 	ben_file = ben_file_;
-	if (data.N > 1000) {
+	if (data.N > 500) {
 		ben_create();
 	}
 }
@@ -53,10 +53,15 @@ void Preprocess::load_data(const std::string& path)
 {
 	std::string file = path + "_new";
 	std::ifstream in(file.c_str(), std::ios::binary);
+	while (!in) {
+		printf("Fail to find data file!\n");
+		exit(0);
+	}
+
 	unsigned int header[3] = {};
 	assert(sizeof header == 3 * 4);
 	in.read((char*)header, sizeof(header));
-	assert(header[0] != sizeof(float));
+	assert(header[0] == sizeof(float));
 	data.N = header[1];
 	data.dim = header[2];
 
@@ -69,14 +74,12 @@ void Preprocess::load_data(const std::string& path)
 
 	int MaxQueryNum = min(200, (int)data.N - 1);
 	data.query = data.val;
-	data.val = &(data.query[200]);
+	data.val = &(data.query[MaxQueryNum]);
 	data.N -= MaxQueryNum;
 
 	std::cout << "Load from new file: " << file << "\n";
 	std::cout << "N=    " << data.N << "\n";
 	std::cout << "dim=  " << data.dim << "\n\n";
-
-	//for (int i = 0; i < data.N; ++i)
 
 	in.close();
 }
@@ -186,7 +189,7 @@ struct Tuple
 
 bool comp(const Tuple& a, const Tuple& b)
 {
-	return a.dist < b.dist;//若前一个元素大于后一个元素，则返回真，否则返回假，即可自定义排序方式
+	return a.dist < b.dist;
 }
 
 void Preprocess::ben_make()
@@ -205,13 +208,10 @@ void Preprocess::ben_make()
 	{
 		std::vector<Tuple> dists(data.N);
 
-
-		//dists.clear();
 		for (unsigned i = 0; i < data.N; i++)
 		{
 			dists[i].id = i;
 			dists[i].dist = cal_dist(data.val[i], data.query[j], data.dim);
-			//dists.push_back(a);
 		}
 
 		sort(dists.begin(), dists.end(), comp);
@@ -220,7 +220,6 @@ void Preprocess::ben_make()
 			benchmark.indice[j][i] = (int)dists[i].id;
 			benchmark.dist[j][i] = dists[i].dist;
 		}
-
 		++pd;
 	}
 
@@ -317,33 +316,6 @@ Parameter::Parameter(Preprocess& prep, unsigned L_, unsigned K_, float rmin_)
 	MaxSize = 5;
 	R_min = rmin_;
 }
-
-//inline float normal_pdf0(			// pdf of Guassian(mean, std)
-//	float x,							// variable
-//	float u,							// mean
-//	float sigma)						// standard error
-//{
-//	float ret = exp(-(x - u) * (x - u) / (2.0f * sigma * sigma));
-//	ret /= sigma * sqrt(2.0f * PI);
-//	return ret;
-//}
-//
-//float new_cdf0(						// cdf of N(0, 1) in range [-x, x]
-//	float x,							// integral border
-//	float step)							// step increment
-//{
-//	float result = 0.0f;
-//	for (float i = -x; i <= x; i += step) {
-//		result += step * normal_pdf0(i, 0.0f, 1.0f);
-//	}
-//	return result;
-//}
-//
-//inline float calc_p0(			// calc probability
-//	float x)							// x = w / (2.0 * r)
-//{
-//	return new_cdf0(x, 0.001f);		// cdf of [-x, x]
-//}
 
 Parameter::~Parameter()
 {
