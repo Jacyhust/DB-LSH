@@ -35,7 +35,7 @@ int main(int argc, char const* argv[])
 	float c = 1.5;
 	unsigned k = 50;
 	unsigned L = 8, K = 10;//NUS
-	L = 5, K = 2;
+	L = 5, K = 10;
 	float beta = 0.1;
 	unsigned Qnum = 100;
 	float R_min = 1.0f;
@@ -65,8 +65,8 @@ int main(int argc, char const* argv[])
 	}
 	else//only for debug, not advised for user
 	{
-		std::cout << BOLDYELLOW << "Usage:" << YELLOW << " ./dblsh datasetName approx_ratio k L K beta R_min(optinal)\n\n" << RESET;
-		exit(-1);
+		/*std::cout << BOLDYELLOW << "Usage:" << YELLOW << " ./dblsh datasetName approx_ratio k L K beta R_min(optinal)\n\n" << RESET;
+		exit(-1);*/
 
 		const std::string datas[] = { "audio","mnist","cifar","NUS","Trevi","gist","deep1m" };
 		datasetName = datas[0];
