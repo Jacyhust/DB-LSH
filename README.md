@@ -76,6 +76,17 @@ The experimental result is saved in the directory `./dataset/ANN` as the file `D
 **DB-LSH** project is developed by referring to [LSHBOX](https://github.com/RSIA-LIESMARS-WHU/LSHBOX) and [RStarTree](https://github.com/Hui-Li/RStarTree). Great appreciation to the contributors.
 
 ## Reference
-**[DB-LSH: Locality-Sensitive Hashing with Query-based Dynamic Bucketing (submitted to ICDE 2022)]**
-
+Please use the following bibtex to cite this work when you use **DB-LSH** in your paper.
+```tex
+@inproceedings{DBLP:conf/icde/TianZZ22,
+  author    = {Yao Tian and
+               Xi Zhao and
+               Xiaofang Zhou},
+  title     = {{DB-LSH:} Locality-Sensitive Hashing with Query-based Dynamic Bucketing},
+  booktitle = {{ICDE}},
+  pages     = {2250--2262},
+  publisher = {{IEEE}},
+  year      = {2022}
+}
+```
 If you meet any issue on the code or take interest in our work, please feel free to contact me (xzhaoca@cse.ust.hk) or YaoTian (ytianbc@cse.ust.hk). Thank you.
