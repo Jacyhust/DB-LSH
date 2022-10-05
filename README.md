@@ -78,4 +78,4 @@ The experimental result is saved in the directory `./dataset/ANN` as the file `D
 ## Reference
 **[DB-LSH: Locality-Sensitive Hashing with Query-based Dynamic Bucketing (submitted to ICDE 2022)]**
 
-If you meet any issue on the code or take interest in our work, please feel free to contact me (xizhao@ust.hk) or YaoTian (ytianbc@cse.ust.hk). Thank you.
+If you meet any issue on the code or take interest in our work, please feel free to contact me (xzhaoca@cse.ust.hk) or YaoTian (ytianbc@cse.ust.hk). Thank you.
